@@ -32,6 +32,20 @@
 #include <cstring>      // memcpy
 #include <type_traits>
 
+#include <utility>
+
+namespace dec_
+{
+    template < typename T, size_t N, typename Gen, size_t... Is >
+    constexpr auto generate_array( Gen&& item, std::index_sequence<Is...>)
+    { return std::array<T,N>{{item(Is)...}}; }
+
+    const std::array<char,200>
+    digits = generate_array<char,200>( [](size_t i) {
+            return char('0' + ((i%2) ? ((i/2)%10) : ((i/2)/10)));
+        }, std::make_index_sequence<200>{} );
+}
+
 namespace dec_ {
 
     // Using a lookup table to convert binary numbers from 0 to 99
